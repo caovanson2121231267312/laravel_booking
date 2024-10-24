@@ -71,56 +71,31 @@
                                 <p>Dashboard v3</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="./index3.html" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Dashboard v3</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
                         <p>
-                            Shop
+                            Quản lý
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('category.index') }}" class="nav-link">
+                            <a href="{{ route('car.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Danh mục</p>
+                                <p>quan li loai phuong tiên</p>
                             </a>
                         </li>
-
-                        {{-- @can(auth()->user()->can('Admin')) --}}
-                        {{-- @can(auth()->user()->can('edit articles')'Admin') --}}
-                            {{-- <li class="nav-item">
-                                <a href="{{ route('users.index') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Tài khoản</p>
-                                </a>
-                            </li> --}}
-                        {{-- @endcan --}}
-
-
-
-                        {{-- <li class="nav-item">
-                            <a href="{{ route('product.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Quản lí sản phẩm</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('order.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Quản lí đơn hàng</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('role.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Quản lí chức vụ</p>
-                            </a>
-                        </li> --}}
-                    {{-- </ul>
-                </li> --}}
+                    </ul>
+                </li>
                 {{-- <li class="nav-item {{ Route::is('management.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-columns"></i>
