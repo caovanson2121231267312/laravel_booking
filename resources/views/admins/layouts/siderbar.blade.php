@@ -95,6 +95,14 @@
                             </a>
                         </li>
                     </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('cardetail.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>quan li phương tiện</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 {{-- <li class="nav-item {{ Route::is('management.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
