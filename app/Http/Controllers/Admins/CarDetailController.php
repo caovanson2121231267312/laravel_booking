@@ -24,6 +24,15 @@ class CarDetailController extends Controller
 
             $data = traffic::with(['type_traffic', 'user']);
 
+            if (!empty($request->car)) {
+                $data->where('name_car', 'like', "%$request->car%");
+            }
+            if (!empty($request->seri)) {
+                $data->where('seri', 'like', "%$request->seri%");
+            }
+            if (!empty($request->driver)) {
+                $data->where('user_id', '=', "$request->driver");
+            }
 
             return DataTables::of($data)
                 ->addColumn('action', function ($row) {
@@ -32,9 +41,9 @@ class CarDetailController extends Controller
 
                 ->make(true);
         } else {
-            $driver=User::get();
-            $type_car=type_traffic::get();
-            return view('admins.cardetail.index',['driver'=>$driver,'type_car'=>$type_car]);
+            $driver = User::get();
+            $type_car = type_traffic::get();
+            return view('admins.cardetail.index', ['driver' => $driver, 'type_car' => $type_car]);
         }
     }
 
@@ -65,8 +74,8 @@ class CarDetailController extends Controller
                 $file_path = 'storage/images/car/' . $fileName . '.' . $fileExt;
                 $files->move('storage/images/car/', $fileName . '.' . $fileExt);
             }
-            $data['avatar_car']=$file_path;
-            $data=traffic::create($data);
+            $data['avatar_car'] = $file_path;
+            $data = traffic::create($data);
 
             return response()->json(['success' => 'đã thêm thành công'], 200);
         } catch (Exception $e) {
@@ -82,7 +91,15 @@ class CarDetailController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $data = traffic::find($id);
+        $driver = User::get();
+        $type_car = type_traffic::get();
+
+        return view('admins.cardetail.show', [
+            'data' => $data,
+            'driver' => $driver,
+            'type_car' => $type_car
+        ]);
     }
 
     /**
@@ -98,7 +115,37 @@ class CarDetailController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // dd( $request->all());
+        try {
+            $data = [
+                'name_car' => $request->name,
+                'note' => $request->note,
+                'status' => $request->status,
+                'seri' => $request->seri,
+                'user_id' => $request->user_id,
+                'type_traffic_id' => $request->type_traffic_id
+            ];
+
+            if ($files = $request->file('avatar_car')) {
+                $fileName = $files->getClientOriginalName();
+                $fileExt = $files->getClientOriginalExtension();
+                $fileName = Str::slug(pathinfo($fileName, PATHINFO_FILENAME)) . '-' . Carbon::now()->timestamp;
+                $file_path = 'storage/images/car/' . $fileName . '.' . $fileExt;
+                $files->move('storage/images/car/', $fileName . '.' . $fileExt);
+
+                $data['avatar_car'] = $file_path;
+            }
+
+            $update = traffic::find($id);
+            $update->update($data);
+            return response()->json([
+                'success' => 'cập nhập thành công'
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'chưa cập nhập được'
+            ], 500);
+        }
     }
 
     /**
@@ -106,6 +153,16 @@ class CarDetailController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $data = traffic::findOrFail($id);
+            $data->delete();
+            return response()->json([
+                'success' => "Xóa thành công",
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => "$id khong ton tai",
+            ], 500);
+        }
     }
 }

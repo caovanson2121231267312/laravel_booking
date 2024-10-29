@@ -26,7 +26,25 @@
                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
                             <div class="mb-3">
                                 <label>Tìm kiếm</label>
-                                <input type="text" class="form-control" placeholder="Nhập tên" id="keywords">
+                                <input type="text" class="form-control" placeholder="Nhập tên phương tiện" id="car">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                            <div class="mb-3">
+                                <label>Biển số</label>
+                                <input type="text" class="form-control" placeholder="Nhập biển số" id="seri">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                            <div class="mb-3">
+                                <label>tài xế</label>
+                                <select  class="form-control" id='driver'>
+                                    <option value="">tất cả</option>
+                                    @foreach ($driver as $value)
+
+                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         {{-- <div class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
@@ -36,7 +54,7 @@
                             </div>
                         </div> --}}
                         <div
-                            class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7 d-flex align-items-end justify-content-between">
+                            class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 d-flex align-items-end justify-content-between">
                             <div class="mb-3">
                                 <button type="button" class="btn btn-outline-info" id="btn-search">
                                     <i class="fas fa-search"></i>
@@ -105,7 +123,7 @@
                             <div id="note-error" class="text-danger fs-6"></div>
                         </div>
                         <div class="form-group">
-                            <label class="mb-1" >status</label>
+                            <label class="mb-1">status</label>
                             <select name='status' class="form-control">
                                 <option value="1">tạm ngưng</option>
                                 <option value="2">đang hoạt động</option>
@@ -120,23 +138,23 @@
                         </div>
                         <div class="form-group">
                             <label class="mb-1">Thông tin ảnh:</label>
-                            <input  type="file" class="form-control" name="avatar_car">
+                            <input type="file" class="form-control" name="avatar_car">
                             <div id="avatar-error" class="text-danger fs-6"></div>
                         </div>
 
                         <div class="form-group">
-                            <label class="mb-1" >Chọn tài xế</label>
+                            <label class="mb-1">Chọn tài xế</label>
                             <select name='user_id' class="form-control">
                                 @foreach ($driver as $value)
-                                <option  value="{{ $value->id }}">{{ $value->name }}</option>
+                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="mb-1" >chọn loại phương tiện</label>
+                            <label class="mb-1">chọn loại phương tiện</label>
                             <select name='type_traffic_id' class="form-control">
                                 @foreach ($type_car as $typecar)
-                                    <option  value="{{ $typecar->id }}">{{ $typecar->name }}</option>
+                                    <option value="{{ $typecar->id }}">{{ $typecar->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -153,8 +171,8 @@
     </div>
 
 
-            {{-- modal edit --}}
-            {{-- <div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="ModalEditLabel" aria-hidden="true">
+    {{-- modal edit --}}
+    <div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="ModalEditLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -168,7 +186,8 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -195,12 +214,12 @@
                 url: '{{ route('cardetail.index') }}',
                 type: 'GET',
                 data: function(param) {
-                    param.keywords = $("#keywords").val();
-                    param.establish = $("#establish").val();
+                    param.car = $("#car").val();
+                    param.seri = $("#seri").val();
+                    param.driver = $("#driver").val();
                 }
             },
-            columns: [
-                {
+            columns: [{
                     data: 'type_traffic.name',
                     name: 'type_traffic.name'
                 },
@@ -260,8 +279,8 @@
                     render: function(data, type, row) {
                         // cons
                         let html =
-                         //   `<img class="border rounded-circle border-1" width="80" height="80" src="${row?.avatar_car}" />`
-                        `<img class="border rounded-circle border-1" width="80" src="{{ config('app.url') }}/${row?.avatar_car}" />`
+                            //   `<img class="border rounded-circle border-1" width="80" height="80" src="${row?.avatar_car}" />`
+                            `<img class="border rounded-circle border-1" width="80" src="{{ config('app.url') }}/${row?.avatar_car}" />`
                         return html
                     }
                 },
@@ -279,8 +298,8 @@
                                             <a class="dropdown-item" href="#">Another action</a>
                                             <a class="dropdown-item" href="#">Something else here</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item modal-edit" data-id="${row?.id}" data-url="{{ route('car.show', ['id' => '/']) }}/${row?.id}" href="#">
-                                                Edit
+                                            <a class="dropdown-item modal-edit" data-id="${row?.id}" data-url="{{ route('cardetail.show', ['id' => '/']) }}/${row?.id}" href="#">
+                                            Edit
                                             </a>
                                             <a class="dropdown-item detele_item" data-id="${row?.id}" data-url="{{ route('car.delete', ['id' => '/']) }}/${row?.id}" href="#">
                                                 Delete
