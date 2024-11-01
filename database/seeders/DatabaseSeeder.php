@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\CustomerType;
+use App\Models\CustumerType;
 use App\Models\User;
 use App\Models\traffic;
 use App\Models\type_traffic;
@@ -41,6 +43,7 @@ class DatabaseSeeder extends Seeder
             ["name" => "Xe 32 chỗ"],
             ["name" => "Xe 7 chỗ"]
         ];
+
         foreach ($type_traffics as $value) {
             type_traffic::firstOrCreate($value);
         };
@@ -74,5 +77,29 @@ class DatabaseSeeder extends Seeder
         foreach ($traffic as $value) {
             traffic::firstOrCreate(['name_car' => $value['name_car']], $value);
         };
+
+
+        $customer_type=[
+            [
+                'name_type'=>'người bình thường',
+                'discount'=>0
+
+            ],
+            [
+                'name_type'=>'trẻ em',
+                'discount'=>50
+
+            ],
+            [
+                'name_type'=>'người khuyết tật',
+                'discount'=>80
+            ]
+        ];
+        foreach($customer_type as $value){
+            CustomerType::firstOrCreate(
+                ['name_type' => $value['name_type']]
+                ,$value
+            );
+        }
     }
 }
