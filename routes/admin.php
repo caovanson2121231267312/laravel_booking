@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admins\AuthController;
 use App\Http\Controllers\Admins\CarDetailController;
 use App\Http\Controllers\Admins\HomeController;
+use App\Http\Controllers\Admins\OrderController;
 use App\Http\Controllers\Admins\TrafficCarController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,13 @@ Route::group(['prefix' => 'admin', 'mi'], function () {
             Route::post('editcar/{id}', 'update')->name('cardetail.edit');
             Route::get('deletecar/{id}', 'destroy')->name('cardetail.delete');
         });
+        Route::controller(OrderController::class)->group(function () {
+            Route::get('order', 'index')->name('order.index');
+            Route::post('orderadd', 'store')->name('order.add');
+            // Route::get('showorder/{id}', 'show')->name('order.show');
+
+         });
+
 
     });
 });

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
 
-            $table->bigInteger('order_id');
+            $table->bigInteger('order_id')->unsigned();
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
 
             // $table->bigInteger('user_id');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('name_customer')->nullable();
             $table->string('phone_customer')->nullable();
 
-            $table->bigInteger('customer_type_id');
+            $table->bigInteger('customer_type_id')->unsigned();
             $table->foreign('customer_type_id')->references('id')->on('customer_types')->onDelete('cascade');
 
             $table->integer('price_person')->nullable();
