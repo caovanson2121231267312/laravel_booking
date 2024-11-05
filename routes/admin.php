@@ -40,8 +40,10 @@ Route::group(['prefix' => 'admin', 'mi'], function () {
         Route::controller(OrderController::class)->group(function () {
             Route::get('order', 'index')->name('order.index');
             Route::post('orderadd', 'store')->name('order.add');
-            // Route::get('showorder/{id}', 'show')->name('order.show');
-
+            Route::get('showorder/{id}', 'show')->name('order.show');
+            Route::post('editorder/{id}', 'update')->name('order.edit');
+            Route::post('cancel/{id}','cancel')->name('order.cancel');
+            Route::post('confirm/{id}','confirm')->name('order.confirm');
          });
 
 

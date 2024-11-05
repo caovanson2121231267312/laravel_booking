@@ -12,6 +12,7 @@ use function Laravel\Prompts\error;
 use App\Http\Controllers\Controller;
 use App\Models\CustomerType;
 use App\Models\OrderDetail;
+use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
@@ -136,7 +137,22 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $data = Order::find($id);
+        $traffic = traffic::get();
+        $customer_types = CustomerType::get();
+        $driver=User::get();
+
+        // dd($data);
+        return view(
+            'admins.order.show',
+            [
+                'order' => $data,
+                'traffic'=>$traffic,
+                'customer_types'=>$customer_types,
+                'driver'=>$driver
+            ]
+
+        );
     }
 
     /**
@@ -152,7 +168,66 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try{
+            $update=Order::find($id);
+            $update->update(
+                [
+                    'start'=>$request->start,
+                    'end'=>$request->end,
+                    'type_traffic_id'=>$request->type_traffic_id,
+                    'user_id'=>$request->user_id,
+                    'status'=>$request->status
+                ]
+            );
+
+
+            return response()->json([
+                'success'=>'cập nhập thành công'
+            ],200);
+
+        }
+        catch(Exception $e){
+            return response()->json([
+                'error'=>'cập nhập không thành công'
+            ],500);
+        }
+    }
+    public function cancel(Request $request, string $id){
+        try{
+            $data =Order::find($id);
+            $data->update([
+                'status_car'=>4 // ddax huy don
+            ]);
+            return response()->json([
+                'success'=>'cập nhập thành công'
+            ],200);
+
+
+        }
+        catch(Exception $e){
+            return response()->json([
+                'error'=>'cập nhập không thành công'
+            ],500);
+        }
+    }
+    public function confirm(string $id){
+        try{
+            $data =Order::find($id);
+            $data->update([
+                'status_car'=>1 // xac nhan don
+            ]);
+            return response()->json([
+                'success'=>'cập nhập thành công'
+            ],200);
+
+
+        }
+        catch(Exception $e){
+            return response()->json([
+                'error'=>'cập nhập không thành công'
+            ],500);
+        }
+
     }
 
     /**

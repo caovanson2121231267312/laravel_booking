@@ -114,8 +114,8 @@
                         <div class="form-group">
                             <label class="mb-1">phương tiện:</label>
                             <select name="traffic" class="form-control" id="">
-                                @foreach ($traffic as $value )
-                                <option value="{{$value->id}}"> {{$value->name_car}}</option>
+                                @foreach ($traffic as $value)
+                                    <option value="{{ $value->id }}"> {{ $value->name_car }}</option>
                                 @endforeach
 
                             </select>
@@ -142,7 +142,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="mb-1">Danh sách khác hàng:  <a href="javascript:void(0)" id="add_customer" class="ms-2 text-primary">+ Thêm khách hàng mới</a></label>
+                            <label class="mb-1">Danh sách khác hàng: <a href="javascript:void(0)" id="add_customer"
+                                    class="ms-2 text-primary">+ Thêm khách hàng mới</a></label>
                             <div id="name-error" class="text-danger fs-6"></div>
                         </div>
 
@@ -162,11 +163,11 @@
 
 
     {{-- modal edit --}}
-    {{-- <div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="ModalEditLabel" aria-hidden="true">
+    <div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="ModalEditLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalEditLabel">Sửa Loại phương tiện</h5>
+                    <h5 class="modal-title" id="ModalEditLabel">Sửa đơn hàng</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -176,7 +177,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
 
     {{-- modal Email --}}
@@ -260,34 +261,32 @@
                 },
                 {
                     data: 'order_detail_count',
-                    name:  'order_detail_count'
+                    name: 'order_detail_count'
                 },
                 {
                     data: 'price',
-                    name:  'price'
+                    name: 'price'
                 },
                 {
                     data: 'total_price',
-                    name:  'total_price'
+                    name: 'total_price'
                 },
                 {
                     data: 'status_car',
                     name: 'status_car',
                     render: function(data, type, row) {
-                    let status_car = 0;
+                        let status_car = 0;
                         if (row.status_car == 0) {
 
                             status_car = "<div class='badge bg-warning'>chờ duyệt </div>";
                         } else if (row.status_car == 1) {
                             status_car = "<div class='badge bg-light text-dark'>đã xác nhận </div>";
-                        }else if(row.status_car==2){
+                        } else if (row.status_car == 2) {
                             status_car = "<div class='badge bg-primary'>đang di chuyển </div>";
-                        }
-                        else if(row.status_car==3){
+                        } else if (row.status_car == 3) {
                             status_car = "<div class='badge bg-success'>đã hoàn thành</div>";
-                        }
-                        else {
-                            status = "<div class='badge bg-danger'>hủy chuyến </div>";
+                        } else {
+                            status_car = "<div class='badge bg-danger'>hủy chuyến </div>";
                         }
 
                         return status_car;
@@ -298,12 +297,10 @@
                     data: 'status_payment',
                     name: 'status_payment',
                     render: function(data, type, row) {
-                    let status_payment = 0;
+                        let status_payment = 0;
                         if (row.status_payment == 0) {
-
                             status_payment = "<div class='text-danger'>chưa thanh toán </div>";
-                        }
-                        else {
+                        } else {
                             status_payment = "<div class='text-warning'>đã thanh toán </div>";
                         }
 
@@ -314,6 +311,21 @@
                     data: 'action',
                     orderable: false,
                     render: function(data, type, row) {
+                        var html_action = "";
+                        if (row.status_car != 4) {
+
+                            if (row.status_car != 1) {
+                                html_action += `<a class="dropdown-item confirm_order" data-id="${row?.id}" data-url="{{ route('order.confirm', ['id' => '/']) }}/${row?.id}" href="#">
+                                                Xác nhận đơn
+                                            </a>`
+                            }
+
+                            html_action += `<a class="dropdown-item cancel_order" data-id="${row?.id}" data-url="{{ route('order.cancel', ['id' => '/']) }}/${row?.id}" href="#">
+                                            hủy đơn
+                                        </a>`;
+                        }
+
+
                         let html = `<div class="text-center">
                                         <button type="button" class="btn" data-toggle="dropdown" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v text-primary"></i>
@@ -323,6 +335,10 @@
                                             <a class="dropdown-item" href="#">Another action</a>
                                             <a class="dropdown-item" href="#">Something else here</a>
                                             <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item modal-edit" data-id="${row?.id}" data-url="{{ route('order.show', ['id' => '/']) }}/${row?.id}" href="#">
+                                                Edit
+                                            </a>
+                                            ${html_action}
 
                                         </div>
                                     </div>`
@@ -358,73 +374,65 @@
             $("#ModalSendMail").modal("show");
         })
 
-        $(document).on("submit", "#submit_changepasssword", function(event) {
-            event.preventDefault();
+        $(document).on('click', '.cancel_order', function() {
+            var id = $(this).data('id');
+            var url = $(this).data('url');
 
-            var button_html = $('#btn-change-password').text();
-            $('#btn-change-password').html(`<div class="spinner-border text-light spin-size-2" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>`);
-
-            var formData = new FormData();
-            formData.append("user_id", id);
-            formData.append("password", $("#password").val());
-            formData.append("password_confirmation", $("#password_confirmation").val());
-
-            var url = $('#submit_changepasssword').attr('action');
-            console.log(url)
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    datatables.ajax.reload();
-                    $('#btn-change-password').html(button_html)
-                    toastr.success(response?.success)
-                    $('#ModalPassword').modal('hide')
-                    document.getElementById("submit_changepasssword").reset();
-                },
-                error: function(xhr) {
-                    check_message_error(xhr, "edit")
-                    $('#btn-change-password').html(button_html)
+            Swal.fire({
+                title: "Bạn chắc chắn muốn hủy chuyến",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Xác nhận"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            id: id,
+                        },
+                        success: function(response) {
+                            toastr.success(response?.success)
+                            datatables.ajax.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            check_message_error(xhr)
+                            datatables.ajax.reload();
+                        }
+                    });
                 }
             });
         })
-        $(document).on("submit", "#submit_SendMail", function(event) {
-            event.preventDefault();
+        $(document).on('click', '.confirm_order', function() {
+            var id = $(this).data('id');
+            var url = $(this).data('url');
 
-            var button_html = $('#btn-send-mail').text();
-            $('#btn-send-mail').html(`<div class="spinner-border text-light spin-size-2" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>`);
-
-            var formData = new FormData();
-            formData.append("user_id", id);
-            formData.append("text_content", $("#text-content").val());
-
-
-            var url = $('#submit_SendMail').attr('action');
-            console.log(url)
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    datatables.ajax.reload();
-                    $('#btn-send-mail').html(button_html)
-                    toastr.success(response?.success)
-                    $('#ModalSendMail').modal('hide')
-                    document.getElementById("submit_SendMail").reset();
-                },
-                error: function(xhr) {
-                    check_message_error(xhr, "edit")
-                    $('#btn-send-mail').html(button_html)
+            Swal.fire({
+                title: "Bạn chắc chắn muốn xác nhận chuyến",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Xác nhận"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            id: id,
+                        },
+                        success: function(response) {
+                            toastr.success(response?.success)
+                            datatables.ajax.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            check_message_error(xhr)
+                            datatables.ajax.reload();
+                        }
+                    });
                 }
             });
         })
@@ -463,7 +471,5 @@
 
             $customer_number++
         })
-
-
     </script>
 @endpush
