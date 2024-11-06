@@ -111,6 +111,18 @@
                             </a>
                         </li>
                     </ul>
+
+                    @role('kế toán')
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('role.index') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>quan li chức vụ</p>
+                                </a>
+                            </li>
+                        </ul>
+                    @endrole
+
                 </li>
                 {{-- <li class="nav-item {{ Route::is('management.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">

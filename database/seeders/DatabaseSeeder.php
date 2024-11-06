@@ -4,13 +4,15 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\CustomerType;
-use App\Models\CustumerType;
 use App\Models\User;
 use App\Models\traffic;
+use App\Models\CustomerType;
+use App\Models\CustumerType;
 use App\Models\type_traffic;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -101,5 +103,76 @@ class DatabaseSeeder extends Seeder
                 ,$value
             );
         }
+
+
+
+
+        // fake role
+        $role = [
+            ["name" => "admin"],
+            ["name" => "kế toán"],
+            ["name" => "quản lí"],
+            ["name" => "trưởng phòng"],
+            ["name" => "nhân viên"]
+        ];
+        foreach($role as $value){
+            Role::firstOrCreate(
+                ['name' => $value['name'] ],
+                $value
+            );
+        }
+        $arr_permissions = [
+            [
+                "name" => "dashboard.statistical",
+                "title" => "Thống kê",
+                "group_name" => 0,
+            ],
+            [
+                "name" => "dashboard.chart",
+                "title" => "Biểu đồ",
+                "group_name" => 0,
+            ],
+            [
+                "name" => "dashboard.login",
+                "title" => "Đăng nhập trang quản trị",
+                "group_name" => 0,
+            ],
+            [
+                "name" => "users.index",
+                "title" => "Xem tài khoản",
+                "group_name" => 1,
+            ],
+            [
+                "name" => "users.create",
+                "title" => "Thêm tài khoản",
+                "group_name" => 1,
+            ],
+            [
+                "name" => "users.update",
+                "title" => "Sửa tài khoản",
+                "group_name" => 1,
+            ],
+            [
+                "name" => "users.delete",
+                "title" => "Xóa tài khoản",
+                "group_name" => 1,
+            ],
+            [
+                "name" => "users.lock",
+                "title" => "Khóa tài khoản",
+                "group_name" => 1,
+            ],
+
+            [
+                "name" => "report.users",
+                "title" => "Báo cáo người dùng",
+                "group_name" => 2,
+            ],
+        ];
+
+        foreach($arr_permissions as $value) {
+            $permission = Permission::firstOrCreate(['name' => $value['name'] ], $value);
+        }
+
     }
 }

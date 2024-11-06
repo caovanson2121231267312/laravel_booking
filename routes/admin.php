@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\Admins\AuthController;
-use App\Http\Controllers\Admins\CarDetailController;
-use App\Http\Controllers\Admins\HomeController;
-use App\Http\Controllers\Admins\OrderController;
-use App\Http\Controllers\Admins\TrafficCarController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admins\AuthController;
+use App\Http\Controllers\Admins\HomeController;
+use App\Http\Controllers\Admins\RoleController;
+use App\Http\Controllers\Admins\OrderController;
+use App\Http\Controllers\Admins\CarDetailController;
+use App\Http\Controllers\Admins\TrafficCarController;
 
 
 
-Route::group(['prefix' => 'admin', 'mi'], function () {
+Route::group(['prefix' => 'admin'], function () {
 
 
 
@@ -45,6 +46,13 @@ Route::group(['prefix' => 'admin', 'mi'], function () {
             Route::post('cancel/{id}','cancel')->name('order.cancel');
             Route::post('confirm/{id}','confirm')->name('order.confirm');
          });
+         Route::controller(RoleController::class)->group(function () {
+            Route::get('/roles','index')->name('role.index');
+            // Route::get('/roles','index')->name('role.index')->middleware('permission:users.index');
+            Route::post('/role/store','store')->name('role.store');
+            Route::get('/role/edit/{id}','edit')->name('role.edit');
+            Route::post('role/update/{id}','update')->name('role.update');
+        });
 
 
     });
